@@ -60,12 +60,12 @@ a { color: inherit; text-decoration: none; }
   position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none;
   width: 36px; height: 36px; margin: -18px 0 0 -18px;
   border: 1px solid var(--paper); border-radius: 50%;
-  mix-blend-mode: difference;
+  box-shadow: 0 0 0 1px rgba(5,5,5,.6), inset 0 0 0 1px rgba(5,5,5,.6);
   transition: width .25s, height .25s, margin .25s;
 }
 .cursor span {
   position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px;
-  background: var(--paper); border-radius: 50%;
+  background: var(--paper); border-radius: 50%; box-shadow: 0 0 0 1px rgba(5,5,5,.6);
 }
 .cursor.is-hover { width: 70px; height: 70px; margin: -35px 0 0 -35px; }
 @media (hover: none) { .cursor { display: none; } }
@@ -128,7 +128,7 @@ a { color: inherit; text-decoration: none; }
 .hero-art { position: absolute; inset: 0; display: grid; place-items: center; }
 .hero-ink {
   position: relative; height: 96vh; width: auto; margin-top: 4vh;
-  mix-blend-mode: screen; transform-origin: 50% 40%;
+  mix-blend-mode: screen; transform-origin: 50% 40%; will-change: transform;
   -webkit-mask: radial-gradient(ellipse 52% 50% at 50% 50%, #000 70%, transparent 100%);
           mask: radial-gradient(ellipse 52% 50% at 50% 50%, #000 70%, transparent 100%);
 }
@@ -187,7 +187,7 @@ a { color: inherit; text-decoration: none; }
 .descent-art { position: absolute; inset: 0; display: grid; place-items: center; }
 .descent-ink {
   position: absolute; left: 50%; top: 50%; height: 100vh; width: auto; translate: -50% -50%;
-  mix-blend-mode: lighten; opacity: 0;
+  opacity: 0; will-change: transform, opacity;
   -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 45%, #000 60%, transparent 100%);
           mask: radial-gradient(ellipse 50% 50% at 50% 45%, #000 60%, transparent 100%);
 }
@@ -214,9 +214,7 @@ a { color: inherit; text-decoration: none; }
 .frame-half.b { clip-path: polygon(0 77.75%, 100% 28.1%, 100% 100%, 0 100%); }
 .frame-content {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(circle at 70% 40%, rgba(255,255,255,.08), transparent 55%),
-    var(--red);
+  background: var(--red);
 }
 .frame-label { position: absolute; top: 90px; left: var(--gutter); font-size: 11px; letter-spacing: .22em; }
 .frame-kanji {
@@ -224,7 +222,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--brush); font-size: min(70vh, 62vw); line-height: 1; color: var(--ink); opacity: .14;
 }
 .frame-ink {
-  position: absolute; right: 6vw; bottom: 0; height: 94vh; width: auto; mix-blend-mode: multiply;
+  position: absolute; right: 6vw; bottom: 0; height: 94vh; width: auto;
   -webkit-mask: linear-gradient(#000 80%, transparent);
           mask: linear-gradient(#000 80%, transparent);
 }
@@ -252,7 +250,7 @@ a { color: inherit; text-decoration: none; }
 }
 .hit-ink {
   position: absolute; right: 3vw; top: 50%; translate: 0 -50%; height: 100vh; width: auto;
-  mix-blend-mode: multiply; transform-origin: 70% 50%;
+  transform-origin: 70% 50%; will-change: transform, opacity;
   -webkit-mask: linear-gradient(90deg, transparent, #000 18%);
           mask: linear-gradient(90deg, transparent, #000 18%);
 }
@@ -261,7 +259,7 @@ a { color: inherit; text-decoration: none; }
 .hit-big { display: flex; font-size: clamp(110px, 21vw, 360px); letter-spacing: -.02em; text-shadow: .03em .03em 0 var(--ink); }
 .hit-big span { display: inline-block; transform-origin: 50% 80%; }
 .hit-cap { position: absolute; right: var(--gutter); bottom: 9vh; max-width: 300px; font-size: 12px; letter-spacing: .04em; }
-.hit-invert { position: absolute; inset: 0; background: #fff; mix-blend-mode: difference; opacity: 0; pointer-events: none; }
+.hit-invert { position: absolute; inset: 0; background: #fff; mix-blend-mode: difference; opacity: 0; visibility: hidden; pointer-events: none; }
 .wipe { position: absolute; inset: 0; pointer-events: none; }
 .wipe i { position: absolute; inset: -10% -60%; }
 .wipe .w1 { background: var(--paper); }
@@ -366,9 +364,9 @@ a { color: inherit; text-decoration: none; }
 
 /* 08 HOLLOW */
 .hollow { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--ink); }
-.hollow-a, .hollow-b { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.hollow-a, .hollow-b { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; will-change: transform; }
 .hollow-b { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
-.hollow-edge { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; filter: drop-shadow(0 0 6px var(--red)); }
+.hollow-edge { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hollow-text {
   position: absolute; right: var(--gutter); bottom: 8vh; z-index: 2; text-align: right;
   background: var(--ink); color: var(--paper); padding: 22px 26px; border-left: 4px solid var(--red);
@@ -380,7 +378,7 @@ a { color: inherit; text-decoration: none; }
 
 /* 09 VERSUS */
 .versus { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--red); }
-.vs-half { position: absolute; inset: 0; overflow: hidden; }
+.vs-half { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
 .vs-half img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 .vs-half.l { clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%); }
 .vs-half.r { clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%); }
@@ -390,7 +388,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--display); font-weight: 900; font-size: clamp(120px, 22vw, 360px); line-height: .8;
   color: var(--red); -webkit-text-stroke: 4px var(--ink); paint-order: stroke fill; text-shadow: .04em .04em 0 var(--ink);
 }
-.vs-word span { display: inline-block; }
+.vs-word span { display: inline-block; will-change: transform, opacity; }
 .vs-name { position: absolute; z-index: 2; background: var(--ink); color: var(--paper); padding: 14px 18px; }
 .vs-name b { display: block; margin-top: 6px; font-family: var(--display); font-weight: 900; font-size: clamp(28px, 3.6vw, 60px); line-height: .86; }
 .vs-name .eyebrow { color: var(--red); }
@@ -400,15 +398,15 @@ a { color: inherit; text-decoration: none; }
 /* 10 GETSUGA */
 .getsuga { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: var(--ink); }
 .getsuga-art {
-  position: absolute; right: 0; top: 0; height: 100%; width: auto; max-width: none; transform-origin: 70% 40%;
+  position: absolute; right: 0; top: 0; height: 100%; width: auto; max-width: none; transform-origin: 70% 40%; will-change: transform;
   -webkit-mask: linear-gradient(90deg, transparent, #000 22%);
           mask: linear-gradient(90deg, transparent, #000 22%);
 }
-.crescent { position: absolute; left: 0; top: 0; width: min(90vh, 90vw); height: auto; transform-origin: 50% 50%; pointer-events: none; }
+.crescent { position: absolute; left: 0; top: 0; width: min(90vh, 90vw); height: auto; transform-origin: 50% 50%; pointer-events: none; will-change: transform, opacity; }
 .getsuga-black { position: absolute; inset: 0; background: var(--ink); opacity: 0; pointer-events: none; }
 .getsuga-text { position: absolute; left: var(--gutter); top: 50%; translate: 0 -50%; z-index: 2; }
 .getsuga-kanji { display: flex; font-family: var(--brush); font-size: clamp(70px, 12vw, 200px); line-height: 1; color: var(--paper); }
-.getsuga-kanji span { display: inline-block; }
+.getsuga-kanji span { display: inline-block; will-change: transform, opacity; }
 .getsuga-kanji span:nth-child(2) { color: var(--red); }
 .getsuga-label { display: block; margin-top: 10px; font-family: var(--display); font-weight: 900; font-size: clamp(28px, 4vw, 64px); letter-spacing: .04em; }
 .getsuga-text p { margin-top: 6px; font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--grey); }

@@ -122,7 +122,7 @@
       .fromTo('.shock', { scale: 0, opacity: 1 }, { scale: 2.6, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'power2.out' }, 1.4)
       .to('.descent-inner', { keyframes: { x: [0, -14, 12, -8, 6, 0] }, duration: 0.35 }, 1.4)
       .to({ v: 1 }, { v: 0, duration: 0.6, onUpdate() { burst = this.targets()[0].v; } }, 1.55)
-      .fromTo('.descent-kanji span', { opacity: 0, scale: 2.4, filter: 'blur(12px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.5, stagger: 0.15, ease: 'power4.out' }, 1.6)
+      .fromTo('.descent-kanji span', { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.5, stagger: 0.15, ease: 'power4.out' }, 1.6)
       .from('.descent-cap', { opacity: 0, y: 20, duration: 0.4 }, 1.9)
       .to('.descent-inner', { opacity: 0, duration: 0.5 }, 2.6);
 
@@ -145,10 +145,10 @@
       .fromTo('.hit-big span', { scale: 3.2, opacity: 0, rotate: () => gsap.utils.random(-14, 14) },
         { scale: 1, opacity: 1, rotate: 0, duration: 0.35, stagger: 0.16, ease: 'power4.in' }, 0.2)
       .to('.speedlines', { opacity: 1, rotate: 8, duration: 0.6 }, 0.85)
-      .to('.hit-invert', { opacity: 1, duration: 0.04 }, 0.95)
-      .to('.hit-invert', { opacity: 0, duration: 0.04 }, 1.02)
-      .to('.hit-invert', { opacity: 1, duration: 0.04 }, 1.08)
-      .to('.hit-invert', { opacity: 0, duration: 0.04 }, 1.14)
+      .to('.hit-invert', { autoAlpha: 1, duration: 0.04 }, 0.95)
+      .to('.hit-invert', { autoAlpha: 0, duration: 0.04 }, 1.02)
+      .to('.hit-invert', { autoAlpha: 1, duration: 0.04 }, 1.08)
+      .to('.hit-invert', { autoAlpha: 0, duration: 0.04 }, 1.14)
       .fromTo('.hit-ink', { xPercent: 30, opacity: 0 }, { xPercent: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, 0)
       .to('.hit-ink', { scale: 1.08, duration: 1.4 }, 0.6)
       .from('.hit-cap', { opacity: 0, y: 20, duration: 0.3 }, 1.2)
@@ -213,12 +213,14 @@
 
     // 08 HOLLOW: a torn red edge drags the inverted Hollow across the page
     const jag = Array.from({ length: 21 }, () => gsap.utils.random(-5, 5));
-    const edge = $('#hollowEdge'), hb = $('.hollow-b');
+    const edge = $('#hollowEdge'), edgeGlow = $('#hollowEdgeGlow'), hb = $('.hollow-b');
     const setEdge = p => {
       const X = p * 135 - 18;
       const pts = jag.map((j, k) => [X + j + (k * 5 - 50) * 0.18, k * 5]);
       hb.style.clipPath = `polygon(0 0, ${pts.map(([x, y]) => `${x}% ${y}%`).join(', ')}, 0 100%)`;
-      edge.setAttribute('points', pts.map(([x, y]) => `${x},${y}`).join(' '));
+      const line = pts.map(([x, y]) => `${x},${y}`).join(' ');
+      edge.setAttribute('points', line);
+      edgeGlow.setAttribute('points', line);
     };
     setEdge(0);
     const hollowP = { v: 0 };
@@ -250,8 +252,8 @@
       .to('.getsuga-art', { keyframes: { x: [0, -12, 10, -6, 0] }, duration: 0.3 }, 1.35)
       .to('.crescent', { x: () => innerWidth * 0.5, y: () => -innerHeight * 0.4, scale: 7, duration: 0.5, ease: 'power3.in' }, 1.4)
       .to('.getsuga-black', { opacity: 1, duration: 0.15 }, 1.75)
-      .fromTo('.getsuga-kanji span', { opacity: 0, yPercent: 60, filter: 'blur(10px)' },
-        { opacity: 1, yPercent: 0, filter: 'blur(0px)', stagger: 0.12, duration: 0.4 }, 1.9)
+      .fromTo('.getsuga-kanji span', { opacity: 0, yPercent: 60, scale: 1.6 },
+        { opacity: 1, yPercent: 0, scale: 1, stagger: 0.12, duration: 0.4, ease: 'power3.out' }, 1.9)
       .fromTo('.getsuga-label, .getsuga-text p', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.3 }, 2.3);
 
 
@@ -300,19 +302,34 @@
     });
   });
 
-  /* ---------- marquees: drift, and surge with scroll velocity ---------- */
+  /* ---------- marquees: drift, and surge with scroll velocity ----------
+     Width is measured once (and on resize), never inside the frame loop: reading
+     layout there forces a reflow every frame. Off-screen bands don't tick at all. */
   $$('.marquee-track').forEach(t => {
     t.innerHTML += t.innerHTML;
     const dir = +t.dataset.speed || 1;
-    let x = 0, skew = 0;
+    let x = 0, skew = 0, w = 0, on = false;
+    const measure = () => (w = t.scrollWidth / 2);
+    document.fonts.ready.then(measure);
+    addEventListener('resize', measure);
+    new IntersectionObserver(([e]) => (on = e.isIntersecting)).observe(t.parentElement);
     gsap.ticker.add(() => {
+      if (!on || !w) return;
       const v = lenis ? lenis.velocity : 0;
-      const w = t.scrollWidth / 2;
       x = gsap.utils.wrap(-w, 0, x - (1 + Math.abs(v) * 0.35) * dir);
       skew += (gsap.utils.clamp(-12, 12, -v * 0.4) - skew) * 0.15;
       t.style.transform = `translate3d(${x}px,0,0) skewX(${skew}deg)`;
     });
   });
+
+  /* ---------- decode every drawing up front, in idle time, so none decodes mid-scroll ---------- */
+  const idle = window.requestIdleCallback || (fn => setTimeout(fn, 200));
+  addEventListener('load', () => idle(() => {
+    $$('img').forEach(img => {
+      img.loading = 'eager';
+      img.decode?.().catch(() => {});
+    });
+  }));
 
   /* ---------- work hover preview ---------- */
   const preview = $('.work-preview'), wpInner = $('.wp-inner');
