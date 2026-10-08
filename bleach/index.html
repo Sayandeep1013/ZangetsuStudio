@@ -36,6 +36,7 @@
 
   <!-- LOADER -->
   <div class="loader" id="loader">
+    <img class="loader-panel" alt="" aria-hidden="true">
     <div class="loader-kanji">斬</div>
     <div class="loader-meta">
       <span>ZANGETSU STUDIO</span>
@@ -249,24 +250,37 @@
       <div class="vs-name r"><span class="eyebrow">CUATRO ESPADA</span><b>ULQUIORRA<br>CIFER</b></div>
     </section>
 
-    <!-- 10 GETSUGA -->
-    <section class="getsuga" id="getsuga" data-chapter="CHAPTER 07" data-title="THE FINAL GETSUGA" data-pin>
-      <img class="getsuga-art" src="assets/art/getsuga.webp" alt="Ichigo diving, chapter 377">
-      <svg class="crescent" viewBox="0 0 400 400" aria-hidden="true">
-        <defs>
-          <filter id="crescent-glow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="6" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-        <path d="M60 340 C 40 180, 160 40, 340 50 C 210 90, 120 190, 60 340 Z" fill="#050505" stroke="#c8102e" stroke-width="5" filter="url(#crescent-glow)"/>
-      </svg>
-      <div class="chapter-tag"><span>CHAPTER 07</span><b>THE FINAL GETSUGA</b></div>
-      <div class="getsuga-black" aria-hidden="true"></div>
-      <div class="getsuga-text">
-        <div class="getsuga-kanji"><span>月</span><span>牙</span><span>天</span><span>衝</span></div>
-        <span class="getsuga-label">GETSUGA TENSHŌ</span>
-        <p>To stop Aizen, he traded every strike he would ever throw for this one.</p>
+    <!-- 10 MUGETSU -->
+    <section class="mugetsu" id="mugetsu" data-pin data-chapter="CHAPTER 07" data-title="MUGETSU">
+      <div class="chapter-tag"><span>CHAPTER 07</span><b>MUGETSU</b></div>
+
+      <!-- beat A: a manga page assembles itself -->
+      <div class="mg-page">
+        <figure class="mg-panel a1"><img src="assets/art/ch7/p1.webp" alt="Aizen's final fusion, chapter 419"></figure>
+        <figure class="mg-panel a2"><img src="assets/art/ch7/p2.webp" alt="Aizen's fourth form, chapter 415"></figure>
+        <figure class="mg-panel a3"><img src="assets/art/ch7/p3.webp" alt="Ichigo's eyes, chapter 420"></figure>
+        <figure class="mg-panel a4"><img src="assets/art/ch7/p4.webp" alt="Ichigo in the Final Getsuga form, chapter 420"></figure>
+        <figure class="mg-panel a5"><img src="assets/art/ch7/p5.webp" alt="Ichigo lands, chapter 421"></figure>
+        <p class="mg-box b1">Aizen had become something no blade could cut.</p>
+        <p class="mg-box b2">So Ichigo stopped being a swordsman.</p>
+        <p class="mg-box b3">He became the Getsuga itself.</p>
+      </div>
+
+      <!-- beat B: ink floods the page; no moon -->
+      <canvas class="mg-flood" aria-hidden="true"></canvas>
+      <img class="mg-pillar" src="assets/art/ch7/pillar.webp" alt="The pillar of Mugetsu, chapter 420">
+      <div class="mg-kanji" aria-hidden="true"><span>無<i></i></span><span>月<i></i></span></div>
+      <p class="mg-nomoon"><b>MUGETSU</b> — <em>no moon.</em><br>Not the one over the prologue. Not the one over Hueco Mundo. None.</p>
+
+      <!-- beat C: the blade goes back -->
+      <div class="mg-farewell">
+        <div class="fw-art">
+          <img class="fw-ichigo" src="assets/art/ch7/farewell-ichigo.webp" alt="Ichigo and Rukia, chapter 423">
+          <canvas class="fw-rukia" aria-hidden="true"></canvas>
+        </div>
+        <h2 class="fw-title"><span class="line"><span>GOODBYE,</span></span><span class="line"><span>RUKIA.</span></span></h2>
+        <p class="fw-narr">On the first night she gave him a blade. On the last, he couldn't even see her leave.</p>
+        <span class="fw-end">END OF ARC · 死神</span>
       </div>
     </section>
 
@@ -330,6 +344,15 @@
       <div class="work-preview" aria-hidden="true"><div class="wp-inner"></div></div>
     </section>
 
+    <!-- ARCHIVE: random panels, reshuffled every visit -->
+    <section class="archive" id="archive">
+      <div class="archive-head">
+        <span class="eyebrow">FROM THE ARCHIVE — 記録</span>
+        <p>Loose panels from the desk. A different handful every visit.</p>
+      </div>
+      <div class="scatter-zone" data-scatter="6" aria-hidden="true"></div>
+    </section>
+
     <!-- 12 CONTACT -->
     <footer class="contact" id="contact">
       <span class="eyebrow">TO BE CONTINUED — START A PROJECT</span>
@@ -339,6 +362,7 @@
         <span>Instagram · X · Vimeo</span>
         <span>Artwork © Tite Kubo / Shueisha — non-commercial fan project</span>
       </div>
+      <div class="scatter-zone contact-zone" data-scatter="2" aria-hidden="true"></div>
       <div class="contact-word" aria-hidden="true">ZANGETSU</div>
     </footer>
   </main>

@@ -1,6 +1,6 @@
 # Zangetsu Studio
 
-Fan-made anime universes, each told as one scroll-driven story. The first is **Bleach**: Ichigo's arc in seven chapters, from a borrowed blade to the Final Getsuga, built entirely from Tite Kubo's own chapter-cover art run through a single ink pass. Every scroll scene is a story beat, and the prologue pays off six chapters later. Dragon Ball, Naruto, One Piece and Jujutsu Kaisen are on the drawing board.
+Fan-made anime universes, each told as one scroll-driven story. The first is **Bleach**: Ichigo's arc in seven chapters, from the night Rukia lends him her blade to the night he spends it all and can no longer see her. It's built entirely from Tite Kubo's own art, chapter covers and manga panels, run through a single ink pass. Every scroll scene is a story beat, and the prologue's moon pays off in the last chapter, 無月: *no moon*. Dragon Ball, Naruto, One Piece and Jujutsu Kaisen are on the drawing board.
 
 [![HTML5](https://img.shields.io/badge/HTML5-static-%23e34f26?logo=html5&logoColor=white)](https://developer.mozilla.org/docs/Web/HTML)
 [![CSS](https://img.shields.io/badge/CSS-custom%20properties-%23663399?logo=css&logoColor=white)](https://developer.mozilla.org/docs/Web/CSS)
@@ -36,21 +36,25 @@ No framework, no build step, no dependencies to install. Serve the folder and it
 |---|---|
 | ![Traitor](screenshots/readme/09-ch04-traitor.png) | ![The Scarmask](screenshots/readme/10-ch05-the-scarmask.png) |
 
-| Ch. 06 — the halves slam together | Ch. 07 — the crescent tears across |
+| Ch. 06 — the halves slam together | Ch. 07 — a manga page assembles itself |
 |---|---|
-| ![Hueco Mundo](screenshots/readme/11-ch06-hueco-mundo.png) | ![The Final Getsuga](screenshots/readme/12-ch07-the-final-getsuga.png) |
+| ![Hueco Mundo](screenshots/readme/11-ch06-hueco-mundo.png) | ![The page](screenshots/readme/12-ch07-the-page.png) |
 
-| Ch. 07 — 月牙天衝 | The storyboard |
+| Ch. 07 — ink floods it: 無月, no moon | Ch. 07 — Goodbye, Rukia |
 |---|---|
-| ![Getsuga Tenshō](screenshots/readme/13-ch07-getsuga-tensho.png) | ![Storyboard](screenshots/readme/14-storyboard.png) |
+| ![No moon](screenshots/readme/13-ch07-no-moon.png) | ![Goodbye, Rukia](screenshots/readme/14-ch07-goodbye-rukia.png) |
 
-| Epilogue — who drew it | A universe still in production |
+| The storyboard | Epilogue — who drew it |
 |---|---|
-| ![Epilogue](screenshots/readme/15-epilogue.png) | ![Coming soon](screenshots/readme/03-coming-soon.png) |
+| ![Storyboard](screenshots/readme/16-storyboard.png) | ![Epilogue](screenshots/readme/17-epilogue.png) |
+
+| From the archive — a random handful every visit | A universe still in production |
+|---|---|
+| ![Archive](screenshots/readme/18-archive.png) | ![Coming soon](screenshots/readme/03-coming-soon.png) |
 
 **On a phone**
 
-![Mobile — home, prologue, the Thirteen, Hueco Mundo](screenshots/readme/16-mobile.png)
+![Mobile — home, prologue, the Thirteen, Hueco Mundo](screenshots/readme/19-mobile.png)
 
 ---
 
@@ -59,6 +63,7 @@ No framework, no build step, no dependencies to install. Serve the folder and it
 - **Scroll is the camera.** Each chapter is a full-screen section pinned by ScrollTrigger for two to three screens of scroll. One scrubbed timeline per chapter runs its beat: the fall, the cut, the slam, the reveal. Lenis smooths the wheel and feeds ScrollTrigger from GSAP's ticker, so both run on one clock.
 - **The art is real ink, not drawn in code.** Every figure is a Kubo chapter cover from the [Bleach Wiki](https://bleach.fandom.com), passed through `tools/ink.py`: greyscale, levels crushed to solid black and paper, and saturated reds kept as the one brand red. Line-heavy art can be flipped to white-on-black for the dark chapters.
 - **Blends are baked, not live.** Art that sits on flat red is rendered onto red by `ink.py --paper`, so no full-screen `mix-blend-mode` has to be recomposited every frame.
+- **Randomness on purpose.** 28 extra manga panels sit in one shuffled bag. Each visit draws from it for the loader, the marquee strips, two extra gallery panels, the taped stickers in the archive and the footer. Nothing repeats until the bag is empty, and no two visits look quite the same.
 - **The story drives the page.** Each chapter section carries `data-chapter` and `data-title`, and a HUD under the nav reads them as you pass. The chapters, their art and their scroll moments are mapped in [`bleach/STORY.md`](bleach/STORY.md).
 - **Slots for motion.** Any `data-scene` can take a video or a still: `tools/make-frames.mjs` turns a clip into WebP frames that scrub on a canvas with the chapter's pin, and the drawn placeholder hides itself.
 
@@ -83,14 +88,15 @@ gsap.timeline({ scrollTrigger: { trigger: '#versus', start: 'top top', end: '+=1
 | 04 | The Thirteen | ch. 156–166, eight captains | Thirteen captains in his way, and one planned it all | The deck fans out, each captain steps forward, Aizen is stamped TRAITOR |
 | 05 | The Scarmask | ch. 289 | The power comes with a voice that wants the body back | A torn red edge drags the inverted Hollow across his face |
 | 06 | Hueco Mundo | ch. 340 Ichigo vs Ulquiorra | The thing under the prologue's moon | The halves slam together, flash, VS, shake |
-| 07 | The Final Getsuga | ch. 377, inverted | He trades every future strike for one | The crescent tears across, blackout, 月牙天衝 |
+| 07 | Mugetsu | ch. 415–423 panels | To stop Aizen he becomes the Getsuga, spends every strike he has, and can no longer see her | A manga page slams together panel by panel; ink floods it and 無月 is brushed in; the ink drains to paper and Rukia dissolves: GOODBYE, RUKIA. |
 | — | Storyboard, Epilogue | gallery, studio | Frames from the story; who drew it | A horizontal run, line reveals, hover previews |
+| — | From the Archive | 28 random panels | Loose panels from the desk | A different handful every visit |
 
 ### Universes
 
 | # | Universe | Folder | Accent | Status |
 |---|---|---|---|---|
-| 01 | Bleach | [`bleach/`](bleach/) | `#C8102E` | Live, 7 chapters |
+| 01 | Bleach | [`bleach/`](bleach/) | `#C8102E` | Live, 7 chapters + archive |
 | 02 | Dragon Ball | [`dragonball/`](dragonball/) | `#FF8A00` | In production |
 | 03 | Naruto | [`naruto/`](naruto/) | `#F2541B` | In production |
 | 04 | One Piece | [`onepiece/`](onepiece/) | `#E2B01E` | In production |
@@ -123,7 +129,7 @@ Each universe swaps the accent and the art. The ink, paper and type stay, so the
 | Markup | Static HTML: one home page, one page per universe |
 | Styling | Hand-written CSS per universe, custom properties for tokens |
 | Motion | GSAP 3.12.5 + ScrollTrigger, Lenis 1.1.13 (vendored in `shared/vendor/`) |
-| Effects | Inline SVG (crescent, slash, torn edge), one canvas for reiatsu particles |
+| Effects | Inline SVG (slash, torn edge); canvas for reiatsu particles, the Mugetsu ink flood and Rukia's dissolve |
 | Art pipeline | Python + numpy + Pillow (`ink.py`), Node + ffmpeg (`make-frames.mjs`) |
 | Images | WebP, 640–1600px, decoded in idle time after load |
 | Hosting | GitHub Pages via GitHub Actions |
@@ -142,8 +148,10 @@ bleach/
   index.html              the seven chapters
   css/style.css           the whole Bleach design system
   js/main.js              one pinned timeline per chapter, HUD, marquees, media slots
-  assets/art/*.webp       ink-treated art, the only images the site loads
-  assets/src/             the original covers ink.py starts from (not deployed)
+  assets/art/*.webp       ink-treated chapter art
+  assets/art/ch7/         Chapter 07's manga panels (419–423)
+  assets/art/scatter/     28 random panels for the archive, loader, marquees and gallery
+  assets/src/             the original covers and panels ink.py starts from (not deployed)
   assets/scenes.json      optional video / still slots
   STORY.md                chapter ↔ section ↔ art ↔ scroll moment
 dragonball/ naruto/ onepiece/ jujutsukaisen/   coming soon
@@ -185,7 +193,8 @@ node tools/make-frames.mjs clip.mp4 hero --universe bleach    # video → scroll
 
 ## Notes
 
-- **Performance.** The chapters after Hueco Mundo used to stutter on first view. A trace found the two kanji marquees reading `scrollWidth` inside the frame loop, forcing a layout every frame and making Lenis and ScrollTrigger's own reads expensive. Width is now measured once, off-screen marquees don't tick, and forced-reflow time fell from 353ms to 134ms over the same scroll. The crescent, which scales 23× through an SVG glow filter, sits on its own layer, so it's rasterised once and then just scaled. Blur reveals became scale reveals, and the torn edge's per-frame `drop-shadow` became a second, wider polyline. First-view frame rate after the fixes: Hueco Mundo 118 → 143fps with no slow frames, the Final Getsuga 122 → 142fps.
+- **Chapter 07, rebuilt.** The first version was a crescent sweeping across a single image, and it neither looked good nor finished the story. It's now the arc's real ending, told in three beats from chapters 419–423. The ink flood is drawn on a half-resolution canvas: the first version used a 120-point `clip-path` that repainted the whole screen each frame, at 128fps with 9 frames over 25ms; the canvas runs at 142fps with none. The 無月 reveal slides an ink cover with `transform` rather than animating `clip-path` on giant glyphs. Rukia's dissolve erases 3px blocks of a canvas, bottom first, the way the panel in chapter 423 draws it.
+- **Performance.** The chapters after Hueco Mundo used to stutter on first view. A trace found the two kanji marquees reading `scrollWidth` inside the frame loop, forcing a layout every frame and making Lenis and ScrollTrigger's own reads expensive. Width is now measured once, off-screen marquees don't tick, and forced-reflow time fell from 353ms to 134ms over the same scroll. Blur reveals became scale reveals, and the torn edge's per-frame `drop-shadow` became a second, wider polyline. First-view frame rate after the fixes: Hueco Mundo 118 → 143fps with no slow frames.
 - **Inverting ink.** Only line-heavy art on white survives inversion. Ulquiorra's winged "The Wrath" cover turned into a white silhouette, because its large black masses became large white ones, so the hero uses ch. 311 instead.
 - **Clipped display type.** Masked headline lines (`overflow: hidden` for the rise-in) clip the top of condensed caps at tight line-heights. Each `.line` carries `padding-top: .14em` with a matching negative margin, so nothing is cut and the rhythm doesn't change.
 - **Pins and `from()`.** A `from()` tween inside a timeline with `invalidateOnRefresh` re-records its hidden start state as the end state after a resize. Chapter timelines use explicit `fromTo()`.

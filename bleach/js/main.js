@@ -70,6 +70,50 @@
     }
   });
 
+  /* ---------- the archive: random manga panels, reshuffled every visit ----------
+     One shuffled bag feeds the loader, the marquees, two extra gallery panels and the
+     sticker zones, so nothing repeats until the pool runs out. */
+  const POOL = Array.from({ length: 28 }, (_, i) => `assets/art/scatter/s${String(i + 1).padStart(2, '0')}.webp`);
+  const shuffle = a => a.map(v => [Math.random(), v]).sort((p, q) => p[0] - q[0]).map(v => v[1]);
+  let bag = shuffle(POOL);
+  const drawPanel = () => (bag.length ? bag : (bag = shuffle(POOL))).pop();
+  const tag = src => 'ARCHIVE · ' + src.match(/s(\d+)/)[1];
+  const rnd = gsap.utils.random;
+
+  $('.loader-panel').src = drawPanel();
+
+  $$('.marquee-track').forEach(t => {
+    $$('span', t).forEach((sp, i) => {
+      if (i % 2) sp.insertAdjacentHTML('afterend', `<img class="marquee-thumb" src="${drawPanel()}" alt="" style="--r:${rnd(-6, 6)}deg">`);
+    });
+  });
+
+  for (let i = 0; i < 2; i++) {
+    const src = drawPanel();
+    $('#framesTrack').insertAdjacentHTML('beforeend',
+      `<figure class="panel"><div class="panel-art"><img src="${src}" alt=""></div><figcaption><span>${tag(src)}</span>FROM THE DESK</figcaption></figure>`);
+  }
+
+  const mobile = innerWidth < 760;
+  $$('.scatter-zone').forEach(zone => {
+    const n = Math.min(+zone.dataset.scatter || 2, mobile ? 4 : 99);
+    const cols = zone.classList.contains('contact-zone') ? 2 : mobile ? 2 : 3;
+    for (let i = 0; i < n; i++) {
+      const src = drawPanel(), col = i % cols, row = Math.floor(i / cols);
+      const fig = document.createElement('figure');
+      fig.className = 'sticker';
+      fig.innerHTML = `<img src="${src}" alt=""><figcaption>${tag(src)}</figcaption>`;
+      const left = (col / cols) * 100 + rnd(2, 100 / cols - 26);
+      const top = cols === 2 && !mobile ? rnd(0, 30) + row * 40 : 16 + row * 42 + rnd(-4, 6) + (i === 0 ? 24 : 0);
+      fig.style.cssText = `left:${left}%;top:${top}%;--w:${Math.round(rnd(190, 290))}px;rotate:${rnd(-13, 13)}deg;--tape:${rnd(-9, 9)}deg`;
+      zone.appendChild(fig);
+      gsap.fromTo(fig, { yPercent: rnd(15, 55) }, {
+        yPercent: -rnd(15, 55), ease: 'none',
+        scrollTrigger: { trigger: zone.parentElement, start: 'top bottom', end: 'bottom top', scrub: true },
+      });
+    }
+  });
+
   /* ---------- loader + intro ---------- */
   document.body.classList.add('is-loading');
   const count = { v: 0 };
@@ -244,18 +288,89 @@
       .to('.vs-half.l', { xPercent: -3, duration: 0.6 }, 1.4)
       .to('.vs-half.r', { xPercent: 3, duration: 0.6 }, 1.4);
 
-    // 10 GETSUGA: the crescent tears across, swallows the frame, the name burns in
-    gsap.timeline({ scrollTrigger: { trigger: '#getsuga', start: 'top top', end: '+=240%', scrub: 1, pin: true, invalidateOnRefresh: true } })
-      .fromTo('.getsuga-art', { scale: 1.3, xPercent: 8 }, { scale: 1, xPercent: 0, duration: 1.2, ease: 'power2.out' }, 0)
-      .fromTo('.crescent', { x: () => -innerWidth * 0.4, y: () => innerHeight * 0.9, rotate: -40, scale: 0.3, opacity: 0 },
-        { x: () => innerWidth * 0.3, y: () => -innerHeight * 0.05, rotate: 10, scale: 1.3, opacity: 1, duration: 0.8, ease: 'power2.in' }, 0.6)
-      .to('.getsuga-art', { keyframes: { x: [0, -12, 10, -6, 0] }, duration: 0.3 }, 1.35)
-      .to('.crescent', { x: () => innerWidth * 0.5, y: () => -innerHeight * 0.4, scale: 7, duration: 0.5, ease: 'power3.in' }, 1.4)
-      .to('.getsuga-black', { opacity: 1, duration: 0.15 }, 1.75)
-      .fromTo('.getsuga-kanji span', { opacity: 0, yPercent: 60, scale: 1.6 },
-        { opacity: 1, yPercent: 0, scale: 1, stagger: 0.12, duration: 0.4, ease: 'power3.out' }, 1.9)
-      .fromTo('.getsuga-label, .getsuga-text p', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.1, duration: 0.3 }, 2.3);
+    // 10 MUGETSU: a manga page slams together, ink floods it, no moon, then the blade goes back
+    // the ink flood is drawn on a half-resolution canvas: one cheap fill per frame,
+    // scaled up by the GPU (a clip-path here repainted the full screen every frame)
+    const flood = $('.mg-flood'), fctx = flood.getContext('2d'), FS = 0.5;
+    const ph = [0, 0, 0, 0].map(() => gsap.utils.random(0, Math.PI * 2));
+    const floodJag = Array.from({ length: 120 }, (_, k) => {
+      const a = (k / 120) * Math.PI * 2;
+      return 0.55 * Math.sin(3 * a + ph[0]) + 0.3 * Math.sin(5 * a + ph[1]) + 0.2 * Math.sin(11 * a + ph[2])
+        + 0.12 * Math.sin(23 * a + ph[3]) + gsap.utils.random(-0.08, 0.08);
+    });
+    const sizeFlood = () => { flood.width = Math.ceil(innerWidth * FS); flood.height = Math.ceil(innerHeight * FS); };
+    sizeFlood();
+    addEventListener('resize', sizeFlood);
+    let floodLast = -1;
+    const setFlood = p => {
+      if (Math.abs(p - floodLast) < 0.001) return;
+      floodLast = p;
+      const w = flood.width, h = flood.height;
+      fctx.clearRect(0, 0, w, h);
+      if (p <= 0) return;
+      const cx = w * 0.5, cy = h * 0.6, R = p * Math.hypot(w, h) * 0.8;
+      fctx.beginPath();
+      floodJag.forEach((j, k) => {
+        const a = (k / floodJag.length) * Math.PI * 2, r = R * (1 + j * 0.14 + Math.sin(p * 6 + k * 0.4) * 0.02);
+        k ? fctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r) : fctx.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+      });
+      fctx.closePath();
+      fctx.fillStyle = '#050505';
+      fctx.fill();
+    };
+    setFlood(0);
 
+    // Rukia dissolves block by block, bottom first, like the panel in chapter 423
+    const rCanvas = $('.fw-rukia'), rCtx = rCanvas.getContext('2d'), rImg = new Image();
+    let blocks = [], erased = 0;
+    const B = 3;
+    rImg.onload = () => {
+      rCanvas.width = rImg.naturalWidth; rCanvas.height = rImg.naturalHeight;
+      rCtx.drawImage(rImg, 0, 0);
+      for (let y = 0; y < rCanvas.height; y += B) for (let x = 0; x < rCanvas.width; x += B)
+        blocks.push([x, y, (1 - y / rCanvas.height) * 0.6 + Math.random() * 0.4]);
+      blocks.sort((p, q) => p[2] - q[2]);
+    };
+    rImg.src = 'assets/art/ch7/farewell-rukia.webp';
+    const setDissolve = p => {
+      if (!blocks.length) return;
+      const target = Math.floor(p * blocks.length);
+      if (target < erased) { rCtx.globalCompositeOperation = 'source-over'; rCtx.drawImage(rImg, 0, 0); erased = 0; }
+      for (; erased < target; erased++) rCtx.clearRect(blocks[erased][0], blocks[erased][1], B, B);
+    };
+
+    const floodP = { v: 0 }, dissP = { v: 0 };
+    // the farewell is on paper: the nav and HUD go dark for it
+    const navDark = on => $$('.nav, .hud').forEach(el => el.classList.toggle('is-dark', on));
+    const mTl = gsap.timeline({ scrollTrigger: {
+      trigger: '#mugetsu', start: 'top top', end: '+=460%', scrub: 1, pin: true,
+      onUpdate: st => navDark(st.progress > 0.7 && st.progress < 1),
+      onLeave: () => navDark(false), onLeaveBack: () => navDark(false),
+    } });
+    mTl.fromTo('.mg-page', { scale: 0.86, rotate: -3, opacity: 0 }, { scale: 1, rotate: -1, opacity: 1, duration: 0.4, ease: 'power3.out' }, 0);
+    [['.a1', -1, 0.3], ['.a2', 1, 0.55], ['.a3', -1, 0.8], ['.a4', 1, 1.05], ['.a5', 1, 1.35]].forEach(([sel, dir, t]) =>
+      mTl.fromTo(sel, { xPercent: dir * 35, scale: 1.18, opacity: 0 }, { xPercent: 0, scale: 1, opacity: 1, duration: 0.28, ease: 'power4.in' }, t));
+    mTl
+      .fromTo('.b1', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2 }, 0.5)
+      .to('.mg-page', { keyframes: { x: [0, -16, 13, -8, 5, 0] }, duration: 0.3 }, 1.33)
+      .fromTo('.b2', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2 }, 1.25)
+      .fromTo('.b3', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2 }, 1.55)
+      .to('.mg-page', { scale: 2.7, rotate: 0, duration: 0.7, ease: 'power2.in' }, 1.85)
+      .to(floodP, { v: 1, duration: 0.6, ease: 'power2.in', onUpdate: () => setFlood(floodP.v) }, 2.1)
+      .set('.mg-page', { autoAlpha: 0 }, 2.72)
+      .fromTo('.mg-kanji', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 2.72)
+      .fromTo('.mg-kanji i', { scaleY: 1 }, { scaleY: 0, stagger: 0.25, duration: 0.4, ease: 'power2.inOut' }, 2.8)
+      .fromTo('.mg-nomoon', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3 }, 3.35)
+      .to('.mg-nomoon', { opacity: 0, duration: 0.2 }, 3.6)
+      .fromTo('.mg-pillar', { opacity: 0, scale: 1.12 }, { opacity: 0.85, scale: 1, duration: 0.8, ease: 'power2.out' }, 3.65)
+      .to('.mg-kanji', { opacity: 0, duration: 0.3 }, 4.3)
+      .to('.mg-farewell', { clipPath: 'inset(0% 0 0 0)', duration: 0.5, ease: 'power3.inOut' }, 4.5)
+      .fromTo('.fw-title .line > span', { yPercent: 110 }, { yPercent: 0, stagger: 0.12, duration: 0.5, ease: 'power4.out' }, 4.85)
+      .fromTo('.fw-narr', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.3 }, 5.15)
+      .to(dissP, { v: 1, duration: 1.1, ease: 'none', onUpdate: () => setDissolve(dissP.v) }, 5.25)
+      .fromTo('.fw-rukia', { opacity: 1 }, { opacity: 0, duration: 0.25 }, 6.1)
+      .fromTo('.fw-end', { opacity: 0 }, { opacity: 1, duration: 0.2 }, 6.2)
+      .to({}, { duration: 0.3 }, 6.4);
 
     // STORY HUD: tracks which chapter is on screen (created after the pins so spacers exist)
     const chapters = $$('[data-chapter]');
@@ -267,10 +382,10 @@
       $$('i', ticks).forEach((t, k) => t.classList.toggle('on', k === i));
     };
     const box = el => (el.parentElement.classList.contains('pin-spacer') ? el.parentElement : el);
-    ScrollTrigger.create({
-      trigger: box($('#roster')), start: 'top 60px', end: 'bottom 60px',
+    [box($('#roster')), $('#archive')].forEach(trigger => ScrollTrigger.create({
+      trigger, start: 'top 60px', end: 'bottom 60px',
       toggleClass: { targets: '.nav, .hud', className: 'is-dark' },
-    });
+    }));
     chapters.forEach((sec, i) => ScrollTrigger.create({
       trigger: box(sec), start: 'top 50%', end: 'bottom 50%',
       onToggle: st => st.isActive && setCh(i),
