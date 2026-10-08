@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zangetsu Studio</title>
+  <meta name="description" content="Zangetsu Studio — fan-made anime universes, told as hand-inked, scroll-driven stories.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Cormorant+Garamond:ital,wght@1,500;1,600&family=IBM+Plex+Mono:wght@400;500&family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/home.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span></span></div>
+  <div class="wipe-out" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a href="./" class="nav-logo"><b>斬月</b> ZANGETSU<span>STUDIO</span></a>
+    <span class="nav-meta">FAN-MADE ANIME UNIVERSES · EST. 2026</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <span class="eyebrow">THE STUDIO — 物語</span>
+      <h1 class="intro-title">
+        <span class="line"><span>PICK A</span></span>
+        <span class="line"><span><em>UNIVERSE.</em></span></span>
+      </h1>
+      <p class="intro-sub">We retell anime stories as scroll-driven chapters: real ink, real arcs, one universe at a time. Bleach is showing now. The rest are on the drawing board.</p>
+    </section>
+
+    <section class="universes" aria-label="Universes">
+      <a class="uni is-live" href="bleach/" style="--accent:#c8102e" data-name="BLEACH">
+        <div class="uni-art"><img src="bleach/assets/art/hero.webp" alt=""><i class="moon"></i></div>
+        <span class="uni-n">01</span>
+        <span class="uni-kanji">死神</span>
+        <div class="uni-body">
+          <span class="uni-status"><i></i>NOW SHOWING · 7 CHAPTERS</span>
+          <h2 class="uni-name">BLEACH</h2>
+          <p class="uni-tag">Shinigami — from a borrowed blade to the Final Getsuga.</p>
+          <span class="uni-cta">ENTER THE STORY →</span>
+        </div>
+      </a>
+      <a class="uni" href="dragonball/" style="--accent:#ff8a00" data-name="DRAGON BALL">
+        <div class="uni-art art-db"><i class="orb"></i></div>
+        <span class="uni-n">02</span>
+        <span class="uni-kanji">龍球</span>
+        <div class="uni-body">
+          <span class="uni-status"><i></i>IN PRODUCTION</span>
+          <h2 class="uni-name">DRAGON<br>BALL</h2>
+          <p class="uni-tag">Seven orbs, one wish, and a Saiyan who never stops getting stronger.</p>
+          <span class="uni-cta">SEE THE BOARD →</span>
+        </div>
+      </a>
+      <a class="uni" href="naruto/" style="--accent:#f2541b" data-name="NARUTO">
+        <div class="uni-art art-naruto"><i class="swirl"></i></div>
+        <span class="uni-n">03</span>
+        <span class="uni-kanji">忍</span>
+        <div class="uni-body">
+          <span class="uni-status"><i></i>IN PRODUCTION</span>
+          <h2 class="uni-name">NARUTO</h2>
+          <p class="uni-tag">The village outcast who decided to be Hokage anyway.</p>
+          <span class="uni-cta">SEE THE BOARD →</span>
+        </div>
+      </a>
+      <a class="uni" href="onepiece/" style="--accent:#e2b01e" data-name="ONE PIECE">
+        <div class="uni-art art-op"><i class="waves"></i></div>
+        <span class="uni-n">04</span>
+        <span class="uni-kanji">海賊</span>
+        <div class="uni-body">
+          <span class="uni-status"><i></i>IN PRODUCTION</span>
+          <h2 class="uni-name">ONE<br>PIECE</h2>
+          <p class="uni-tag">A straw hat, a rubber crew, and the edge of the Grand Line.</p>
+          <span class="uni-cta">SEE THE BOARD →</span>
+        </div>
+      </a>
+      <a class="uni" href="jujutsukaisen/" style="--accent:#7b4dff" data-name="JUJUTSU KAISEN">
+        <div class="uni-art art-jjk"><i class="cracks"></i></div>
+        <span class="uni-n">05</span>
+        <span class="uni-kanji">呪</span>
+        <div class="uni-body">
+          <span class="uni-status"><i></i>IN PRODUCTION</span>
+          <h2 class="uni-name">JUJUTSU<br>KAISEN</h2>
+          <p class="uni-tag">Curses, domains, and a boy who swallowed a king.</p>
+          <span class="uni-cta">SEE THE BOARD →</span>
+        </div>
+      </a>
+    </section>
+
+    <section class="method">
+      <span class="eyebrow">HOW EACH UNIVERSE IS MADE</span>
+      <ol>
+        <li><b>01</b><h3>INK</h3><p>Original manga art, run through one ink pass so every page reads black, paper and one accent colour.</p></li>
+        <li><b>02</b><h3>STORY</h3><p>The arc is broken into chapters. Every scroll scene is a beat, and the prologue always pays off later.</p></li>
+        <li><b>03</b><h3>SCROLL</h3><p>GSAP and Lenis turn the scroll into the camera: pins, cuts, impact frames and wipes.</p></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© 2026 Zangetsu Studio — non-commercial fan project. All characters and artwork belong to their creators.</span>
+    <a href="https://github.com/Sayandeep1013/ZangetsuStudio">GitHub ↗</a>
+  </footer>
+
+  <script src="shared/vendor/gsap.min.js"></script>
+  <script src="shared/home.js"></script>
+</body>
+</html>
